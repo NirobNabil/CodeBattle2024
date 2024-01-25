@@ -8,7 +8,10 @@ import com.codingame.game.Player;
 import view.AttackerView;
 
 public class Attacker {
-	private List<SubTile> remainingPath;
+	//private List<SubTile> remainingPath;
+	private Tile[][] grid;
+	private Tile currentTile;
+	private SubTile currentSubtile;
 	private int id;
 	private int maxHealth;
 	private int hitPoints;
@@ -23,9 +26,17 @@ public class Attacker {
 
 	private boolean reachOpponentBase;
 
-	public Attacker(int hp, int speed, int bounty, Player owner, Player enemy) {
+	public Attacker(Tile[][] grid, int hp, int speed, int bounty, Player owner, Player enemy) {
 		id = idCounter++;
 		//this.remainingPath = path;
+		if(owner.getIndex() == 1) {
+			this.currentTile = new Tile(Constants.MAP_WIDTH-1, 0, true);
+		}
+		else {
+			this.currentTile = new Tile(0, Constants.MAP_HEIGHT-1 , true);
+		}
+		this.currentSubtile = new SubTile(this.currentTile,0 , 0);
+		this.grid = grid;
 		this.owner = owner;
 		this.enemy = enemy;
 		this.maxSpeed = speed;
@@ -61,19 +72,29 @@ public class Attacker {
 		return slowCountdown;
 	}
 
-	public int getPathLength() {
-		return remainingPath.size();
-	}
+//	public int getPathLength() {
+//		return remainingPath.size();
+//	}
 
 	public SubTile getLocation() {
-		return remainingPath.get(remainingPath.size() - 1);
+		return currentSubtile;
+	}
+
+	public Tile getCurrentTile() {
+		return currentTile;
+	}
+
+	public SubTile getCurrentSubTile() {
+		return currentSubtile;
 	}
 
 	public void kill() {
 		dealDamage(hitPoints);
 	}
 
-	public boolean canRespawn(){ return reachOpponentBase;}
+	public boolean canRespawn() {
+		return reachOpponentBase;
+	}
 
 	public boolean canHeal() {
 		return hitPoints < maxHealth;
@@ -97,17 +118,19 @@ public class Attacker {
 		return hitPoints <= 0;
 	}
 
-	public boolean hasSucceeded() {
-		return remainingPath.size() == 1;
-	}
+//	public boolean hasSucceeded() {
+//		return remainingPath.size() == 1;
+//	}
 
 	public void setView(AttackerView view) {
 		this.view = view;
 	}
-
+// ekhane destination er distance ta rakhbo ?
 	public ArrayList<SubTile> getSteps() {
 		return steps;
 	}
+
+
 
 	public void move() {
 		int speed = getSpeed();
@@ -133,7 +156,7 @@ public class Attacker {
 		StringBuilder sb = new StringBuilder();
 		sb.append(id).append(" ");
 		sb.append(owner.getIndex()).append(" ");
-		sb.append(getLocation().toString()).append(" ");
+		//sb.append(getLocation().toString()).append(" ");
 		sb.append(hitPoints).append(" ");
 		sb.append(maxHealth).append(" ");
 		sb.append(getSpeed()).append(" ");

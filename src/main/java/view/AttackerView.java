@@ -102,7 +102,7 @@ public class AttackerView {
 
 		ArrayList<SubTile> steps = attacker.getSteps();
 		if (steps.size() == 0) {
-			if (attacker.hasSucceeded()) {
+			if (attacker.canRespawn()) {
 				if (finalY == -1) {
 					changeAnimation(attackerBodySprites, attackerHelmetSprites);
 					attackerBody.setLoop(true).play();
@@ -125,11 +125,34 @@ public class AttackerView {
 			}
 			return;
 		}
-		steps.add(attacker.getLocation());
+		//steps.add(attacker.getLocation());
 
 		// Seems to be needed for the animations to play
 		graphics.commitEntityState(0, attackerBody);
 		graphics.commitEntityState(0, attackerHelmet);
+
+//		ArrayList<SubTile> neighbours = attacker.getCurrentSubTile().getNeighbors();
+//
+//		double destination_x = attacker.getEnemy().getIndex() == 0 ? 0 : Constants.MAP_WIDTH-1;
+//		double destination_y = attacker.getEnemy().getIndex() == 0 ? Constants.MAP_HEIGHT-1 : 0;
+//		double minDist = Double.MAX_VALUE;
+//		SubTile nextSubTile = attacker.getCurrentSubTile();
+//
+//		for (SubTile st : neighbours) {
+//			double dx = st.getX() - destination_x;
+//			double dy = st.getY() - destination_y;
+//			double dist = Math.sqrt(dx * dx + dy * dy);
+//			if(dist < minDist) {
+//				nextSubTile = st;
+//				dist = minDist;
+//			}
+//		}
+//
+//
+//		while (steps.size() < speed && remainingPath.size() > 1) {
+//			steps.add(remainingPath.get(remainingPath.size() - 1));
+//			remainingPath.remove(remainingPath.size() - 1);
+//		}
 
 		for (int i = 1; i < steps.size() - 1; i++) {
 			SubTile current = steps.get(i);
@@ -164,7 +187,7 @@ public class AttackerView {
 	}
 
 	public void kill() {
-		if (attacker.hasSucceeded()) {
+		if (attacker.canRespawn()) {
 			changeAnimation(attackerBodyWinSprites, attackerHelmetWinSprites);
 		} else {
 			changeAnimation(attackerBodyDeathSprites, attackerHelmetDeathSprites);

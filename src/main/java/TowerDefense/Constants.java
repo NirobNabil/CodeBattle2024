@@ -4,7 +4,7 @@ public class Constants {
 	public static final int MAP_WIDTH = 17; // keep the dimensions odd for best map generation results
 	public static final int MAP_HEIGHT = 17;
 	public static final double ENFORCE_BRANCHING_PROBABILITY = 0.6;
-	public static final int TURN_COUNT = 200;
+	public static final int TURN_COUNT = 100;
 	public static final int MIN_PATH_LENGTH = 30;
 
 	public static final int PLAYER_MONEY = 350;

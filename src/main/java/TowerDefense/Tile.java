@@ -6,12 +6,12 @@ public class Tile {
 	private int x;
 	private int y;
 	private boolean canyon;
+	private ArrayList<SubTile> subTiles;
 	private Tile[] neighbors = new Tile[4];
 
 	public Tile(int x, int y, boolean canyon) {
 		this.x = x;
 		this.y = y;
-
 		this.canyon = canyon;
 	}
 
@@ -65,6 +65,16 @@ public class Tile {
 				neighbors[dir] = grid[x_][y_];
 			}
 		}
+	}
+	// returns the subTiles of a tile
+	public ArrayList<SubTile> getSubTiles() {
+		ArrayList<SubTile> result = new ArrayList<>();
+		for( int i = 0; i< SubTile.SUBTILE_SIZE; i++) {
+			for( int j = 0; j< SubTile.SUBTILE_SIZE; j++) {
+				result.add(new SubTile(this, i, j));
+			}
+		}
+		return result;
 	}
 
 	public ArrayList<SubTile> connectTo(Tile to) {

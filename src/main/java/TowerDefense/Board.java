@@ -64,59 +64,59 @@ public class Board {
 //		return new ArrayList<>(paths.get(index));
 //	}
 
-	private void findPaths(Tile[][] grid, int width, int height, Tile target, List<List<SubTile>> paths) {
-		int[][] dist = new int[width][height];
-		for (int x = 0; x < width; x++) {
-			for (int y = 0; y < height; y++) {
-				dist[x][y] = -1;
-			}
-		}
+//	private void findPaths(Tile[][] grid, int width, int height, Tile target, List<List<SubTile>> paths) {
+//		int[][] dist = new int[width][height];
+//		for (int x = 0; x < width; x++) {
+//			for (int y = 0; y < height; y++) {
+//				dist[x][y] = -1;
+//			}
+//		}
+//
+//		dist[target.getX()][target.getY()] = 0;
+//		Queue<Tile> bfs = new ConcurrentLinkedQueue<>();
+//		bfs.add(target);
+//
+//		while (bfs.size() > 0) {
+//			Tile sub = bfs.poll();
+//			for (Tile neighbor : sub.getNeighbors()) {
+//				if (neighbor == null || !neighbor.canEnter())
+//					continue;
+//				if (dist[neighbor.getX()][neighbor.getY()] >= 0)
+//					continue;
+//				dist[neighbor.getX()][neighbor.getY()] = dist[sub.getX()][sub.getY()] + 1;
+//				bfs.add(neighbor);
+//			}
+//		}
+//
+//		buildPaths(grid, width, height, target, paths, dist, new ArrayList<Tile>());
+//	}
 
-		dist[target.getX()][target.getY()] = 0;
-		Queue<Tile> bfs = new ConcurrentLinkedQueue<>();
-		bfs.add(target);
-
-		while (bfs.size() > 0) {
-			Tile sub = bfs.poll();
-			for (Tile neighbor : sub.getNeighbors()) {
-				if (neighbor == null || !neighbor.canEnter())
-					continue;
-				if (dist[neighbor.getX()][neighbor.getY()] >= 0)
-					continue;
-				dist[neighbor.getX()][neighbor.getY()] = dist[sub.getX()][sub.getY()] + 1;
-				bfs.add(neighbor);
-			}
-		}
-
-		buildPaths(grid, width, height, target, paths, dist, new ArrayList<Tile>());
-	}
-
-	private void buildPaths(Tile[][] grid, int width, int height, Tile currentTile, List<List<SubTile>> paths, int[][] dist, List<Tile> currentPath) {
-		currentPath.add(currentTile);
-		if (currentTile.getX() == 0) {
-			ArrayList<Tile> path = new ArrayList<>(currentPath);
-			path.add(0, new Tile(path.get(0).getX() + 1, path.get(0).getY(), true));
-			path.add(new Tile(currentTile.getX() - 1, currentTile.getY(), true));
-			ArrayList<SubTile> result = new ArrayList<>();
-			for (int i = 1; i < path.size(); i++) {
-				Tile t1 = path.get(i - 1);
-				Tile t2 = path.get(i);
-				for (SubTile sub : t1.connectTo(t2))
-					result.add(sub);
-			}
-			paths.add(result);
-
-			currentPath.remove(currentPath.size() - 1);
-			return;
-		}
-
-		for (Tile neighbor : currentTile.getNeighbors()) {
-			if (neighbor != null && dist[neighbor.getX()][neighbor.getY()] == dist[currentTile.getX()][currentTile.getY()] + 1)
-				buildPaths(grid, width, height, neighbor, paths, dist, currentPath);
-		}
-
-		currentPath.remove(currentPath.size() - 1);
-	}
+//	private void buildPaths(Tile[][] grid, int width, int height, Tile currentTile, List<List<SubTile>> paths, int[][] dist, List<Tile> currentPath) {
+//		currentPath.add(currentTile);
+//		if (currentTile.getX() == 0) {
+//			ArrayList<Tile> path = new ArrayList<>(currentPath);
+//			path.add(0, new Tile(path.get(0).getX() + 1, path.get(0).getY(), true));
+//			path.add(new Tile(currentTile.getX() - 1, currentTile.getY(), true));
+//			ArrayList<SubTile> result = new ArrayList<>();
+//			for (int i = 1; i < path.size(); i++) {
+//				Tile t1 = path.get(i - 1);
+//				Tile t2 = path.get(i);
+//				for (SubTile sub : t1.connectTo(t2))
+//					result.add(sub);
+//			}
+//			paths.add(result);
+//
+//			currentPath.remove(currentPath.size() - 1);
+//			return;
+//		}
+//
+//		for (Tile neighbor : currentTile.getNeighbors()) {
+//			if (neighbor != null && dist[neighbor.getX()][neighbor.getY()] == dist[currentTile.getX()][currentTile.getY()] + 1)
+//				buildPaths(grid, width, height, neighbor, paths, dist, currentPath);
+//		}
+//
+//		currentPath.remove(currentPath.size() - 1);
+//	}
 
 	public int getWidth() {
 		return width;
@@ -197,13 +197,7 @@ public class Board {
 
 	// creating attackers
 	public void createAttacker(Attacker a) {
-
-		if (a.getOwner().getIndex() == 1) {
-			attackers.add(new Attacker(Constants.HP, Constants.SPEED, Constants.BOUNTY, players.get(1), players.get(0)));
-		}
-		else {
-			attackers.add(new Attacker(Constants.HP, Constants.SPEED, Constants.BOUNTY, players.get(0), players.get(1)));
-		}
+		attackers.add(new Attacker(grid, Constants.HP, Constants.SPEED, Constants.BOUNTY, a.getOwner(), a.getEnemy()));
 	}
 
 	public void spawnAttackers(int turn) {
@@ -258,12 +252,12 @@ public class Board {
 
 		for (int i = attackers.size() - 1; i >= 0; i--) {
 			Attacker a = attackers.get(i);
-			if (a.hasSucceeded()) {
-				attackers.remove(i);
-				veterans.add(a);
-				a.kill();
-				a.getEnemy().loseLife();
-			}
+//			if (a.hasSucceeded()) {
+//				attackers.remove(i);
+//				veterans.add(a);
+//				a.kill();
+//				a.getEnemy().loseLife();
+//			}
 		}
 	}
 

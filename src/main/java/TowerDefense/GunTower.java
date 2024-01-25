@@ -24,8 +24,8 @@ public class GunTower extends Tower {
 		for (Attacker a : attackers) {
 			if (getOwner() == a.getOwner() || !inRange(a))
 				continue;
-			if (target == null || a.getPathLength() < target.getPathLength())
-				target = a;
+//			if (target == null || a.getPathLength() < target.getPathLength())  // lagte pare
+//				target = a;
 		}
 		if (target == null)
 			return false;
