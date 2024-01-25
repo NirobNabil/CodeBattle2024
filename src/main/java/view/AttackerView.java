@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import TowerDefense.Constants;
+import TowerDefense.Tile;
 import com.codingame.gameengine.module.entities.GraphicEntityModule;
 import com.codingame.gameengine.module.entities.Group;
 import com.codingame.gameengine.module.entities.Sprite;
@@ -80,96 +81,49 @@ public class AttackerView {
 	}
 
 	private int finalY = -1;
-	public void move() {
-		if (attacker.isSlow()) {
-			if (glueSprite == null) {
-				glueSprite = graphics.createSprite().setImage("glue" + (1 + attacker.getId() % 3) + ".png").setScale(0.3).setY(50);
-				if (attacker.getOwner().getIndex() == 1) {
-					glueSprite.setX(-BoardView.CELL_SIZE);
-				}
-				group.add(glueSprite);
-				graphics.commitEntityState(0, group, glueSprite);
-			}
-			if (glueSprite.getAlpha() == 0) {
-				glueSprite.setAlpha(1);
-				graphics.commitEntityState(0, glueSprite);
-			}
-		} else if (glueSprite != null && glueSprite.getAlpha() == 1) {
-			glueSprite.setAlpha(0);
-			graphics.commitEntityState(0, glueSprite);
-		}
+	public void move(Tile[][] grid) {
+//		if (attacker.isSlow()) {
+//			if (glueSprite == null) {
+//				glueSprite = graphics.createSprite().setImage("glue" + (1 + attacker.getId() % 3) + ".png").setScale(0.3).setY(50);
+//				if (attacker.getOwner().getIndex() == 1) {
+//					glueSprite.setX(-BoardView.CELL_SIZE);
+//				}
+//				group.add(glueSprite);
+//				graphics.commitEntityState(0, group, glueSprite);
+//			}
+//			if (glueSprite.getAlpha() == 0) {
+//				glueSprite.setAlpha(1);
+//				graphics.commitEntityState(0, glueSprite);
+//			}
+//		} else if (glueSprite != null && glueSprite.getAlpha() == 1) {
+//			glueSprite.setAlpha(0);
+//			graphics.commitEntityState(0, glueSprite);
+//		}
 
 
-		ArrayList<SubTile> steps = attacker.getSteps();
-		if (steps.size() == 0) {
-			if (attacker.canRespawn()) {
-				if (finalY == -1) {
-					changeAnimation(attackerBodySprites, attackerHelmetSprites);
-					attackerBody.setLoop(true).play();
-					attackerHelmet.setLoop(true).play();
-					finalY = 923 * attacker.getId() % (Constants.MAP_HEIGHT * BoardView.CELL_SIZE);
-				}
-
-				int missing = group.getY() - finalY;
-				if (missing == 0) {
-					if (attackerBody.isPlaying()) {
-						attackerBody.pause();
-						attackerHelmet.pause();
-					}
-					return;
-				}
-				int moveDist = attacker.getSpeed() * BoardView.CELL_SIZE / SubTile.SUBTILE_SIZE;
-				if (Math.abs(missing) < moveDist) moveDist = Math.abs(missing);
-				if (group.getY() < finalY) group.setY(group.getY() + moveDist);
-				else group.setY(group.getY() - moveDist);
-			}
-			return;
-		}
-		//steps.add(attacker.getLocation());
-
-		// Seems to be needed for the animations to play
 		graphics.commitEntityState(0, attackerBody);
 		graphics.commitEntityState(0, attackerHelmet);
 
-//		ArrayList<SubTile> neighbours = attacker.getCurrentSubTile().getNeighbors();
-//
-//		double destination_x = attacker.getEnemy().getIndex() == 0 ? 0 : Constants.MAP_WIDTH-1;
-//		double destination_y = attacker.getEnemy().getIndex() == 0 ? Constants.MAP_HEIGHT-1 : 0;
-//		double minDist = Double.MAX_VALUE;
-//		SubTile nextSubTile = attacker.getCurrentSubTile();
-//
-//		for (SubTile st : neighbours) {
-//			double dx = st.getX() - destination_x;
-//			double dy = st.getY() - destination_y;
-//			double dist = Math.sqrt(dx * dx + dy * dy);
-//			if(dist < minDist) {
-//				nextSubTile = st;
-//				dist = minDist;
-//			}
-//		}
-//
-//
-//		while (steps.size() < speed && remainingPath.size() > 1) {
-//			steps.add(remainingPath.get(remainingPath.size() - 1));
-//			remainingPath.remove(remainingPath.size() - 1);
-//		}
+		ArrayList<SubTile> neighbours = attacker.getCurrentSubTile().getNeighbors(grid);
 
-		for (int i = 1; i < steps.size() - 1; i++) {
-			SubTile current = steps.get(i);
-			SubTile prev = steps.get(i - 1);
-			SubTile next = steps.get(i + 1);
-			boolean changeDir = current.getX() != prev.getX() && current.getY() != next.getY();
-			changeDir |= current.getX() != next.getX() && current.getY() != prev.getY();
-			if (changeDir) {
-				group.setX((int) (BoardView.CELL_SIZE * current.getX()));
-				group.setY((int) (BoardView.CELL_SIZE * current.getY()));
-				graphics.commitEntityState((double) i / (steps.size() - 1), group);
+		double destination_x = attacker.getEnemy().getIndex() == 0 ? Constants.MAP_HEIGHT-1:0;
+		double destination_y = attacker.getEnemy().getIndex() == 0 ? 0: Constants.MAP_WIDTH-1;
+		double minDist = Double.MAX_VALUE;
+		SubTile nextSubTile = attacker.getCurrentSubTile();
+
+		for (SubTile st : neighbours) {
+			double dx = st.getX() - destination_x;
+			double dy = st.getY() - destination_y;
+			double dist = Math.sqrt(dx * dx + dy * dy);
+			if(dist < minDist) {
+				nextSubTile = st;
+				minDist = dist;
 			}
 		}
 
-		SubTile last = steps.get(steps.size() - 1);
-		group.setX((int) (BoardView.CELL_SIZE * last.getX()));
-		group.setY((int) (BoardView.CELL_SIZE * last.getY()));
+		group.setX((int) (BoardView.CELL_SIZE * nextSubTile.getX()));
+		group.setY((int) (BoardView.CELL_SIZE * nextSubTile.getY()));
+		attacker.setCurrentSubtile(nextSubTile);
 		//tooltips.setTooltipText(sprite, getTooltipString());
 	}
 

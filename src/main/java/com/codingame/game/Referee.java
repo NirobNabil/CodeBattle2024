@@ -3,6 +3,7 @@ package com.codingame.game;
 import java.util.Locale;
 import java.util.Random;
 
+import TowerDefense.*;
 import com.codingame.gameengine.core.AbstractPlayer.TimeoutException;
 import com.codingame.gameengine.core.AbstractReferee;
 import com.codingame.gameengine.core.MultiplayerGameManager;
@@ -11,11 +12,6 @@ import com.codingame.gameengine.module.entities.GraphicEntityModule;
 import com.codingame.gameengine.module.tooltip.TooltipModule;
 import com.google.inject.Inject;
 
-import TowerDefense.Board;
-import TowerDefense.Constants;
-import TowerDefense.InvalidActionException;
-import TowerDefense.MapGenerator;
-import TowerDefense.Tile;
 import view.BoardView;
 
 public class Referee extends AbstractReferee {
@@ -36,6 +32,7 @@ public class Referee extends AbstractReferee {
 	@Override
 	public void init() {
 		Locale.setDefault(new Locale("en", "US"));
+
 		random = new Random(gameManager.getSeed());
 		Tile[][] grid = MapGenerator.generateMap(random);
 		gameManager.setMaxTurns(Constants.TURN_COUNT);
@@ -56,49 +53,51 @@ public class Referee extends AbstractReferee {
 		}
 
 		for (Player player : gameManager.getActivePlayers()) {
-			try {
-				String actions = player.getOutputs().get(0);
-				for (String action : actions.split(";")) {
-					try {
-						String[] parts = action.trim().split(" ");
-						if (parts.length == 0)
-							continue;
-						parts[0] = parts[0].toUpperCase();
-						if (parts[0].equals("PASS"))
-							continue;
-						if (parts[0].equals("BUILD")) {
-							if (parts.length != 4)
-								throw new InvalidActionException("wrong amount of arguments for BUILD", true, player);
-							int x = Integer.parseInt(parts[1]);
-							int y = Integer.parseInt(parts[2]);
-							String type = parts[3];
-							//board.cacheBuild(player, x, y, type);
-						} else if (parts[0].equals("UPGRADE")) {
-							if (parts.length != 3)
-								throw new InvalidActionException("wrong amount of arguments for UPGRADE", true, player);
-							int id = Integer.parseInt(parts[1]);
-							String type = parts[2];
-							//board.upgrade(player, id, type); // upgrade before build => can't build and upgrade in the same turn
-						} else if (parts[0].equals("MSG")) {
-							player.setMessage(action.substring(4));
-						} else {
-							throw new InvalidActionException("unknown command: " + action, true, player);
-						}
-					} catch (InvalidActionException ex) {
-						if (ex.isGameBreaking()) {
-							ex.getPlayer().deactivate(ex.getPlayer().getNicknameToken() + ": " + ex.getMessage());
-						} else {
-							gameManager.addToGameSummary(ex.getPlayer().getNicknameToken() + ": " + ex.getMessage());
-						}
-					} catch (NumberFormatException ex) {
-						player.deactivate(player.getNicknameToken() + " provided a malformed output");
-					}
-				}
-			} catch (TimeoutException e) {
-				player.kill();
-				player.deactivate(String.format("$%d timeout!", player.getIndex()));
-			}
+//			try {
+//				String actions = player.getOutputs().get(0);
+////				for (String action : actions.split(";")) {
+////					try {
+////						String[] parts = action.trim().split(" ");
+////						if (parts.length == 0)
+////							continue;
+////						parts[0] = parts[0].toUpperCase();
+////						if (parts[0].equals("PASS"))
+////							continue;
+////						if (parts[0].equals("BUILD")) {
+////							if (parts.length != 4)
+////								throw new InvalidActionException("wrong amount of arguments for BUILD", true, player);
+////							int x = Integer.parseInt(parts[1]);
+////							int y = Integer.parseInt(parts[2]);
+////							String type = parts[3];
+////							//board.cacheBuild(player, x, y, type);
+////						} else if (parts[0].equals("UPGRADE")) {
+////							if (parts.length != 3)
+////								throw new InvalidActionException("wrong amount of arguments for UPGRADE", true, player);
+////							int id = Integer.parseInt(parts[1]);
+////							String type = parts[2];
+////							//board.upgrade(player, id, type); // upgrade before build => can't build and upgrade in the same turn
+////						} else if (parts[0].equals("MSG")) {
+////							player.setMessage(action.substring(4));
+////						} else {
+////							throw new InvalidActionException("unknown command: " + action, true, player);
+////						}
+////					} catch (InvalidActionException ex) {
+////						if (ex.isGameBreaking()) {
+////							ex.getPlayer().deactivate(ex.getPlayer().getNicknameToken() + ": " + ex.getMessage());
+////						} else {
+////							gameManager.addToGameSummary(ex.getPlayer().getNicknameToken() + ": " + ex.getMessage());
+////						}
+////					} catch (NumberFormatException ex) {
+////						player.deactivate(player.getNicknameToken() + " provided a malformed output");
+////					}
+////				}
+//			} catch (TimeoutException e) {
+//				e.printStackTrace();
+//				player.kill();
+//				player.deactivate(String.format("$%d timeout!", player.getIndex()));
+//			}
 		}
+
 		while (true) {
 			try {
 				if (!board.executeBuilds())
@@ -112,9 +111,13 @@ public class Referee extends AbstractReferee {
 				}
 			}
 		}
+
+
 		board.moveAttackers(turn);
 		board.fireTowers();
 		board.spawnAttackers(turn);
+
+
 
 		board.updateView();
 		for (Player player : gameManager.getPlayers()) {
@@ -122,8 +125,11 @@ public class Referee extends AbstractReferee {
 			if (player.isDead() && player.isActive())
 				player.deactivate(player.getNicknameToken() + ": no lives left");
 		}
-		if (gameManager.getActivePlayers().size() < 2)
+		if (turn == 50) {
+			gameManager.getActivePlayers().get(0).deactivate();
+			gameManager.getActivePlayers().get(0).deactivate();
 			gameManager.endGame();
+		}
 	}
 
 	@Override

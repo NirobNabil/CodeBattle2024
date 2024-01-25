@@ -70,8 +70,8 @@ public class BoardView {
 		}
 	}
 
-	public void addAttacker(Attacker attacker) {
-		AttackerView view = new AttackerView(attacker, boardGroup, graphics, tooltips);
+	public AttackerView addAttacker(Attacker attacker) {
+		return new AttackerView(attacker, boardGroup, graphics, tooltips);
 	}
 
 	public void addTower(Tower tower) {

@@ -13,6 +13,8 @@ public class Tile {
 		this.x = x;
 		this.y = y;
 		this.canyon = canyon;
+		subTiles = createSubTiles();
+
 	}
 
 	public int getX() {
@@ -67,7 +69,7 @@ public class Tile {
 		}
 	}
 	// returns the subTiles of a tile
-	public ArrayList<SubTile> getSubTiles() {
+	private ArrayList<SubTile> createSubTiles() {
 		ArrayList<SubTile> result = new ArrayList<>();
 		for( int i = 0; i< SubTile.SUBTILE_SIZE; i++) {
 			for( int j = 0; j< SubTile.SUBTILE_SIZE; j++) {
@@ -76,6 +78,14 @@ public class Tile {
 		}
 		return result;
 	}
+
+	public ArrayList<SubTile> getSubTiles(){
+		return  subTiles;
+	}
+
+
+
+
 
 	public ArrayList<SubTile> connectTo(Tile to) {
 		ArrayList<SubTile> result = new ArrayList<>();
@@ -93,5 +103,10 @@ public class Tile {
 				result.add(new SubTile(to, 0, i));
 		}
 		return result;
+	}
+
+	public SubTile getSubTile(int subX, int subY) {
+
+		return subTiles.get(subX*SubTile.SUBTILE_SIZE+subY);
 	}
 }

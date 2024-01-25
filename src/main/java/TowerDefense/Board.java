@@ -12,6 +12,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import com.codingame.game.Player;
 import com.codingame.game.Referee;
 
+import view.AttackerView;
 import view.BoardView;
 
 public class Board {
@@ -143,8 +144,6 @@ public class Board {
 	}
 
 	public void moveAttackers(int turn) {
-		for (Attacker a : veterans)
-			a.move();
 		for (Attacker a : attackers)
 			a.move();
 	}
@@ -196,28 +195,23 @@ public class Board {
 //	}
 
 	// creating attackers
-	public void createAttacker(Attacker a) {
-		attackers.add(new Attacker(grid, Constants.HP, Constants.SPEED, Constants.BOUNTY, a.getOwner(), a.getEnemy()));
+	public void createAttackerAtBase(Player owner,Player enemy) {
+
+		Attacker a =new Attacker(grid, Constants.HP, Constants.SPEED, Constants.BOUNTY, owner, enemy);
+		AttackerView a_view = view.addAttacker(a);
+		a.setView(a_view);
+
+		attackers.add(a);
 	}
 
 	public void spawnAttackers(int turn) {
 
-		// if attackers have reached opponent base they can respawn
-		for (Attacker a : attackers){
-			if (a.canRespawn()) {
-				createAttacker(a);
+		if(turn==1){
+			for (int i = 0; i <2 ; i++) {
+				for (int j = 0; j <Constants.CHARACTER_COUNT ; j++) {
+					createAttackerAtBase(players.get(i),players.get(i^1));
+				}
 			}
-		}
-//		for (Attacker a : futureAttackers.get(turn)) {
-//			attackers.add(a);
-//			view.addAttacker(a);
-//		}
-		// dead attackers can respawn
-		for (Attacker a : veterans) {
-			Attacker newAttacker;
-			createAttacker(a);
-			veterans.remove(a);
-			view.addAttacker(a);
 		}
 	}
 

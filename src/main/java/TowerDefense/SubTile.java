@@ -1,5 +1,6 @@
 package TowerDefense;
 
+import javax.swing.border.TitledBorder;
 import java.util.ArrayList;
 
 public class SubTile {
@@ -34,12 +35,34 @@ public class SubTile {
 //	}
 	private static int[] dx = { 0, 1, 0, -1 };
 	private static int[] dy = { 1, 0, -1, 0 };
-	public ArrayList<SubTile> getNeighbors() {
+	public ArrayList<SubTile> getNeighbors(Tile [][] grid) {
 		ArrayList<SubTile> neighbors = new ArrayList<>();
 		for (int dir = 0; dir < 4; dir++) {
 			int x_ = this.subX + dx[dir];
+			int tx_ = tile.getX() + dx[dir];
 			int y_ = this.subY + dy[dir];
-			if (x_ >= 0 && x_ < SUBTILE_SIZE  && y_ >= 0 && y_ < SUBTILE_SIZE) {
+			int ty_ = tile.getY() + dx[dir];
+			if (x_ < 0) {
+				if (tx_ >= 0 && tx_ < grid.length && ty_ >= 0 && ty_ < grid[0].length) {
+					neighbors.add(new SubTile(new Tile(tx_,ty_,true), SUBTILE_SIZE + x_, y_));
+				}
+			}
+			else if (y_ < 0) {
+				if (tx_ >= 0 && tx_ < grid.length && ty_ >= 0 && ty_ < grid[0].length) {
+					neighbors.add(new SubTile(new Tile(tx_,ty_,true), x_, SUBTILE_SIZE + y_));
+				}
+			}
+			else if(x_ > SUBTILE_SIZE){
+				if (tx_ >= 0 && tx_ < grid.length && ty_ >= 0 && ty_ < grid[0].length) {
+					neighbors.add(new SubTile(new Tile(tx_,ty_,true), SUBTILE_SIZE - x_, y_));
+				}
+			}
+			else if(y_ > SUBTILE_SIZE) {
+				if (tx_ >= 0 && tx_ < grid.length && ty_ >= 0 && ty_ < grid[0].length) {
+					neighbors.add(new SubTile(new Tile(tx_,ty_,true), x_, SUBTILE_SIZE - y_));
+				}
+			}
+			if (tx_ >= 0 && tx_ < grid.length && ty_ >= 0 && ty_ < grid[0].length) {
 				neighbors.add(new SubTile(this.getTile(), x_, y_));
 			}
 		}

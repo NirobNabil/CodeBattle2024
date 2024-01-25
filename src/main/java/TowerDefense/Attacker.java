@@ -30,12 +30,16 @@ public class Attacker {
 		id = idCounter++;
 		//this.remainingPath = path;
 		if(owner.getIndex() == 1) {
-			this.currentTile = new Tile(Constants.MAP_WIDTH-1, 0, true);
+			this.currentTile = grid[0][Constants.MAP_WIDTH-1];
+			this.currentSubtile = currentTile.getSubTiles().get(SubTile.SUBTILE_SIZE-1);
 		}
 		else {
-			this.currentTile = new Tile(0, Constants.MAP_HEIGHT-1 , true);
+			this.currentTile = grid[Constants.MAP_HEIGHT-1][0];
+			this.currentSubtile = currentTile.getSubTiles().get(SubTile.SUBTILE_SIZE*(SubTile.SUBTILE_SIZE-1));
 		}
-		this.currentSubtile = new SubTile(this.currentTile,0 , 0);
+
+
+
 		this.grid = grid;
 		this.owner = owner;
 		this.enemy = enemy;
@@ -131,15 +135,20 @@ public class Attacker {
 	}
 
 
+	public void setCurrentSubtile(SubTile t){
+		this.currentSubtile = t;
+		this.currentTile = currentSubtile.getTile();
+
+	}
 
 	public void move() {
 		int speed = getSpeed();
 		steps = new ArrayList<>();
-		while (steps.size() < speed && remainingPath.size() > 1) {
-			steps.add(remainingPath.get(remainingPath.size() - 1));
-			remainingPath.remove(remainingPath.size() - 1);
-		}
-		view.move();
+//		while (steps.size() < speed && remainingPath.size() > 1) {
+//			steps.add(remainingPath.get(remainingPath.size() - 1));
+//			remainingPath.remove(remainingPath.size() - 1);
+//		}
+		view.move(grid);
 		if (slowCountdown > 0)
 			slowCountdown--;
 	}

@@ -42,4 +42,5 @@ public class Constants {
 	public static final int SPEED = 12;
 	public static final int BOUNTY = 25;
 	public static final int NUM_UPGRADE_SPRITES = 3;
+    public static int CHARACTER_COUNT =5;
 }
