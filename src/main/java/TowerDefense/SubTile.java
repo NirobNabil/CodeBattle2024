@@ -1,6 +1,5 @@
 package TowerDefense;
 
-import javax.swing.border.TitledBorder;
 import java.util.ArrayList;
 
 public class SubTile {
@@ -8,7 +7,7 @@ public class SubTile {
 	private Tile tile;
 	private int subX;
 	private int subY;
-	private ArrayList<SubTile> neighbors;
+	private ArrayList<SubTile> neighbors = new ArrayList<>();
 
 	public SubTile(Tile tile, int subX, int subY) {
 		this.tile = tile;
@@ -35,37 +34,46 @@ public class SubTile {
 //	}
 	private static int[] dx = { 0, 1, 0, -1 };
 	private static int[] dy = { 1, 0, -1, 0 };
-	public ArrayList<SubTile> getNeighbors(Tile [][] grid) {
-		ArrayList<SubTile> neighbors = new ArrayList<>();
+
+	// working here
+	public void initNeighbors(Tile [][] grid) {
 		for (int dir = 0; dir < 4; dir++) {
 			int x_ = this.subX + dx[dir];
 			int tx_ = tile.getX() + dx[dir];
 			int y_ = this.subY + dy[dir];
-			int ty_ = tile.getY() + dx[dir];
+			int ty_ = tile.getY() + dy[dir];
 			if (x_ < 0) {
 				if (tx_ >= 0 && tx_ < grid.length && ty_ >= 0 && ty_ < grid[0].length) {
-					neighbors.add(new SubTile(new Tile(tx_,ty_,true), SUBTILE_SIZE + x_, y_));
+					neighbors.add(grid[tx_][ty_].getSubTile(SUBTILE_SIZE + x_, y_));
 				}
 			}
 			else if (y_ < 0) {
 				if (tx_ >= 0 && tx_ < grid.length && ty_ >= 0 && ty_ < grid[0].length) {
-					neighbors.add(new SubTile(new Tile(tx_,ty_,true), x_, SUBTILE_SIZE + y_));
+					neighbors.add(grid[tx_][ty_].getSubTile(x_,SUBTILE_SIZE + y_));
 				}
 			}
-			else if(x_ > SUBTILE_SIZE){
+			else if(x_ >= SUBTILE_SIZE){
 				if (tx_ >= 0 && tx_ < grid.length && ty_ >= 0 && ty_ < grid[0].length) {
-					neighbors.add(new SubTile(new Tile(tx_,ty_,true), SUBTILE_SIZE - x_, y_));
+					neighbors.add(grid[tx_][ty_].getSubTile(SUBTILE_SIZE - x_, y_));
 				}
 			}
-			else if(y_ > SUBTILE_SIZE) {
+			else if(y_ >= SUBTILE_SIZE) {
 				if (tx_ >= 0 && tx_ < grid.length && ty_ >= 0 && ty_ < grid[0].length) {
-					neighbors.add(new SubTile(new Tile(tx_,ty_,true), x_, SUBTILE_SIZE - y_));
+					neighbors.add(grid[tx_][ty_].getSubTile(x_,SUBTILE_SIZE - y_));
 				}
 			}
-			if (tx_ >= 0 && tx_ < grid.length && ty_ >= 0 && ty_ < grid[0].length) {
-				neighbors.add(new SubTile(this.getTile(), x_, y_));
+			else {
+				neighbors.add(tile.getSubTile(x_,y_));
 			}
 		}
+//		if(tile.getX()==0 && tile.getY()==16){System.out.println("--------PRINTING NEIGHBORS--------------\n\n\n");
+//			for ( SubTile s : neighbors) {
+//				System.out.println(s.getTile().getX() + " " + s.getTile().getY() +  " " + s.getX() + " " + s.getY());
+//			}
+//		}
+	}
+
+	public ArrayList<SubTile> getNeighbors() {
 		return neighbors;
 	}
 

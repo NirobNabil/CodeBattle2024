@@ -30,15 +30,15 @@ public class Attacker {
 		id = idCounter++;
 		//this.remainingPath = path;
 		if(owner.getIndex() == 1) {
-			this.currentTile = grid[0][Constants.MAP_WIDTH-1];
-			this.currentSubtile = currentTile.getSubTiles().get(SubTile.SUBTILE_SIZE-1);
+			this.currentTile = grid[Constants.MAP_WIDTH-1-(id%5)][0];
+			this.currentSubtile = currentTile.getSubTile(9-(id%5), 0);
+			//this.currentSubtile = currentTile.getSubTiles().get(((SubTile.SUBTILE_SIZE-1)*(SubTile.SUBTILE_SIZE-1))+(SubTile.SUBTILE_SIZE-1));
 		}
 		else {
-			this.currentTile = grid[Constants.MAP_HEIGHT-1][0];
-			this.currentSubtile = currentTile.getSubTiles().get(SubTile.SUBTILE_SIZE*(SubTile.SUBTILE_SIZE-1));
+			this.currentTile = grid[0][Constants.MAP_HEIGHT-1-(id%5)];
+			this.currentSubtile = currentTile.getSubTile(0, 9-(id%5));
+			//this.currentSubtile = currentTile.getSubTiles().get(SubTile.SUBTILE_SIZE-1);
 		}
-
-
 
 		this.grid = grid;
 		this.owner = owner;
@@ -129,7 +129,6 @@ public class Attacker {
 	public void setView(AttackerView view) {
 		this.view = view;
 	}
-// ekhane destination er distance ta rakhbo ?
 	public ArrayList<SubTile> getSteps() {
 		return steps;
 	}

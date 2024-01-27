@@ -104,10 +104,10 @@ public class AttackerView {
 		graphics.commitEntityState(0, attackerBody);
 		graphics.commitEntityState(0, attackerHelmet);
 
-		ArrayList<SubTile> neighbours = attacker.getCurrentSubTile().getNeighbors(grid);
+		ArrayList<SubTile> neighbours = attacker.getCurrentSubTile().getNeighbors();
 
-		double destination_x = attacker.getEnemy().getIndex() == 0 ? Constants.MAP_HEIGHT-1:0;
-		double destination_y = attacker.getEnemy().getIndex() == 0 ? 0: Constants.MAP_WIDTH-1;
+		double destination_x = attacker.getEnemy().getIndex() == 0 ? 0 : ((Constants.MAP_WIDTH-1)+(((double)SubTile.SUBTILE_SIZE-1)/SubTile.SUBTILE_SIZE));
+		double destination_y = attacker.getEnemy().getIndex() == 0 ? ((Constants.MAP_HEIGHT-1)+(((double)SubTile.SUBTILE_SIZE-1)/SubTile.SUBTILE_SIZE)) : 0;
 		double minDist = Double.MAX_VALUE;
 		SubTile nextSubTile = attacker.getCurrentSubTile();
 

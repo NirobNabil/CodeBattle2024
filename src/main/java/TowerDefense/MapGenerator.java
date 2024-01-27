@@ -14,7 +14,7 @@ public class MapGenerator {
 	public static Tile[][] generateMap(Random random) {
 		MapGenerator.random = random;
 		enforceBranching = random.nextDouble() < Constants.ENFORCE_BRANCHING_PROBABILITY;
-		BoardDraft board = new BoardDraft(17, 17);
+		BoardDraft board = new BoardDraft(Constants.MAP_WIDTH,Constants.MAP_HEIGHT);
 		//BoardDraft draft = BoardDraft.generatePath(Constants.MAP_WIDTH, Constants.MAP_HEIGHT, 2);
 		return board.grid;
 	}
@@ -121,7 +121,19 @@ public class MapGenerator {
 					grid[x][y].initNeighbors(grid);
 				}
 			}
-
+			for (int x = 0; x < width; x++) {
+				for (int y = 0; y < height; y++) {
+					grid[x][y].initSubTiles();
+				}
+			}
+			for (int x = 0; x < width; x++) {
+				for (int y = 0; y < height; y++) {
+					ArrayList<SubTile> subtiles = grid[x][y].getSubTiles();
+					for (SubTile st : subtiles) {
+						st.initNeighbors(grid);
+					}
+				}
+			}
 			mazeGen(grid[1][1], new boolean[width][height]);
 			ArrayList<Tile> exitCandidates = new ArrayList<Tile>();
 			for (int y = 1; y < height; y += 2) {
