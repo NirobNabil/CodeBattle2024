@@ -31,12 +31,12 @@ public class Attacker {
 		//this.remainingPath = path;
 		if(owner.getIndex() == 1) {
 			this.currentTile = grid[Constants.MAP_WIDTH-1-(id%5)][0];
-			this.currentSubtile = currentTile.getSubTile(9-(id%5), 0);
+			this.currentSubtile = currentTile.getSubTile(SubTile.SUBTILE_SIZE-1, 0);
 			//this.currentSubtile = currentTile.getSubTiles().get(((SubTile.SUBTILE_SIZE-1)*(SubTile.SUBTILE_SIZE-1))+(SubTile.SUBTILE_SIZE-1));
 		}
 		else {
 			this.currentTile = grid[0][Constants.MAP_HEIGHT-1-(id%5)];
-			this.currentSubtile = currentTile.getSubTile(0, 9-(id%5));
+			this.currentSubtile = currentTile.getSubTile(0, SubTile.SUBTILE_SIZE-1);
 			//this.currentSubtile = currentTile.getSubTiles().get(SubTile.SUBTILE_SIZE-1);
 		}
 
@@ -80,8 +80,8 @@ public class Attacker {
 //		return remainingPath.size();
 //	}
 
-	public SubTile getLocation() {
-		return currentSubtile;
+	public Tile getLocation() {
+		return currentTile;
 	}
 
 	public Tile getCurrentTile() {
@@ -147,7 +147,9 @@ public class Attacker {
 //			steps.add(remainingPath.get(remainingPath.size() - 1));
 //			remainingPath.remove(remainingPath.size() - 1);
 //		}
-		view.move(grid);
+		for (int i=0;i<Constants.SPEED;i++) {
+			view.move();
+		}
 		if (slowCountdown > 0)
 			slowCountdown--;
 	}

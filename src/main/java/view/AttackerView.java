@@ -37,8 +37,10 @@ public class AttackerView {
 		spriteCache.add(new ArrayList<Group>());
 		spriteCache.add(new ArrayList<Group>());
 	}
+	final Random random = new Random();
 
 	public AttackerView(Attacker attacker, Group boardGroup, GraphicEntityModule graphics, TooltipModule tooltips) {
+
 		if (attackerBodySprites == null) {
 			attackerBodySprites = graphics.createSpriteSheetSplitter().setSourceImage("att_body.png").setHeight(94).setWidth(100).setImageCount(10).setImagesPerRow(4).setOrigRow(0).setOrigCol(0).setName("ab").split();
 			attackerHelmetSprites = graphics.createSpriteSheetSplitter().setSourceImage("att_helmet.png").setHeight(94).setWidth(100).setImageCount(10).setImagesPerRow(4).setOrigRow(0).setOrigCol(0).setName("ah").split();
@@ -53,7 +55,7 @@ public class AttackerView {
 		attacker.setView(this);
 		for (Group g : spriteCache.get(attacker.getOwner().getIndex())) {
 			group = g;
-			SubTile t = attacker.getLocation();
+			Tile t = attacker.getLocation();
 			group.setAlpha(1).setX((int) (BoardView.CELL_SIZE * t.getX())).setY((int) (BoardView.CELL_SIZE * t.getY()));
 			graphics.commitEntityState(0, group);
 			spriteCache.get(attacker.getOwner().getIndex()).remove(g);
@@ -70,10 +72,10 @@ public class AttackerView {
 			group = graphics.createGroup(attackerBody, attackerHelmet)
 					.setX((int) (BoardView.CELL_SIZE * attacker.getLocation().getX()))
 					.setY((int) (BoardView.CELL_SIZE * attacker.getLocation().getY()));
+			attackerBody.setX(-BoardView.CELL_SIZE);
+			attackerHelmet.setX(-BoardView.CELL_SIZE);
 			if (attacker.getOwner().getIndex() == 1) {
-				attackerBody.setX(-BoardView.CELL_SIZE);
-				attackerHelmet.setX(-BoardView.CELL_SIZE);
-				group.setScaleX(-1);
+				group.setScaleX(-1); // sprite ke y axis borabor invert kore
 			}
 			boardGroup.add(group);
 		}
@@ -81,7 +83,7 @@ public class AttackerView {
 	}
 
 	private int finalY = -1;
-	public void move(Tile[][] grid) {
+	public void move() {
 //		if (attacker.isSlow()) {
 //			if (glueSprite == null) {
 //				glueSprite = graphics.createSprite().setImage("glue" + (1 + attacker.getId() % 3) + ".png").setScale(0.3).setY(50);
@@ -112,15 +114,33 @@ public class AttackerView {
 		SubTile nextSubTile = attacker.getCurrentSubTile();
 
 		for (SubTile st : neighbours) {
+			if(st.getTile().isObstacle()) continue;
 			double dx = st.getX() - destination_x;
 			double dy = st.getY() - destination_y;
 			double dist = Math.sqrt(dx * dx + dy * dy);
 			if(dist < minDist) {
-				nextSubTile = st;
 				minDist = dist;
 			}
 		}
 
+		ArrayList<SubTile>all = new ArrayList<>();
+
+		for (SubTile st : neighbours) {
+
+			if(st.getTile().isObstacle()) {
+				continue;
+			}
+			double dx = st.getX() - destination_x;
+			double dy = st.getY() - destination_y;
+			double dist = Math.sqrt(dx * dx + dy * dy);
+			if(dist == minDist) {
+				all.add(st);
+			}
+		}
+
+		if(!all.isEmpty()) nextSubTile = all.get(random.nextInt(all.size()));
+//		Tile t = nextSubTile.getTile();
+//		boolean b = t.isObstacle();
 		group.setX((int) (BoardView.CELL_SIZE * nextSubTile.getX()));
 		group.setY((int) (BoardView.CELL_SIZE * nextSubTile.getY()));
 		attacker.setCurrentSubtile(nextSubTile);

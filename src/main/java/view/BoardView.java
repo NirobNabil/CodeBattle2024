@@ -66,6 +66,11 @@ public class BoardView {
 						innerGroup.add(headquarter);
 					}
 				}
+				if (board.getGrid()[x][y].isObstacle()) {  // if there is obstacle
+					Sprite obstacle = Utils.createBoardSprite(graphics, "plateau.png", x, y);
+					tooltips.setTooltipText(obstacle, "x: " + x + "\ny: " + y);
+					innerGroup.add(obstacle);
+				}
 			}
 		}
 	}
