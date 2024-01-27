@@ -29,12 +29,23 @@ public class Attacker {
 	public Attacker(Tile[][] grid, int hp, int speed, int bounty, Player owner, Player enemy) {
 		id = idCounter++;
 		//this.remainingPath = path;
+
+		// Errorneous code...
+//		if(owner.getIndex() == 1) {
+//			this.currentTile = grid[0][Constants.MAP_WIDTH-1];
+//			this.currentSubtile = currentTile.getSubTiles().get(SubTile.SUBTILE_SIZE-1);
+//		}
+//		else {
+//			this.currentTile = grid[Constants.MAP_HEIGHT-1][0];
+//			this.currentSubtile = currentTile.getSubTiles().get(SubTile.SUBTILE_SIZE*(SubTile.SUBTILE_SIZE-1));
+//		}
+
 		if(owner.getIndex() == 1) {
-			this.currentTile = grid[0][Constants.MAP_WIDTH-1];
+			this.currentTile = grid[0][Constants.MAP_HEIGHT-1];
 			this.currentSubtile = currentTile.getSubTiles().get(SubTile.SUBTILE_SIZE-1);
 		}
 		else {
-			this.currentTile = grid[Constants.MAP_HEIGHT-1][0];
+			this.currentTile = grid[Constants.MAP_WIDTH-1][0];
 			this.currentSubtile = currentTile.getSubTiles().get(SubTile.SUBTILE_SIZE*(SubTile.SUBTILE_SIZE-1));
 		}
 

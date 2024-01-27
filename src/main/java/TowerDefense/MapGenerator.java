@@ -14,7 +14,8 @@ public class MapGenerator {
 	public static Tile[][] generateMap(Random random) {
 		MapGenerator.random = random;
 		enforceBranching = random.nextDouble() < Constants.ENFORCE_BRANCHING_PROBABILITY;
-		BoardDraft board = new BoardDraft(17, 17);
+//		BoardDraft board = new BoardDraft(17, 17);
+		BoardDraft board = new BoardDraft(Constants.MAP_WIDTH, Constants.MAP_HEIGHT);
 		//BoardDraft draft = BoardDraft.generatePath(Constants.MAP_WIDTH, Constants.MAP_HEIGHT, 2);
 		return board.grid;
 	}
