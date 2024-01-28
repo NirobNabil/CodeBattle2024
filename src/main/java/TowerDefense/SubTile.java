@@ -20,11 +20,11 @@ public class SubTile {
 	}
 
 	public double getX() {
-		return tile.getX() + (double) subX / SUBTILE_SIZE;
+		return tile.getX() -.5+ (double) subX / SUBTILE_SIZE;
 	}
 
 	public double getY() {
-		return tile.getY() + (double) subY / SUBTILE_SIZE;
+		return tile.getY() -.8+ (double) subY / SUBTILE_SIZE;
 	}
 
 //	public SubTile mirror(Tile[][] grid, int width, int height) {
