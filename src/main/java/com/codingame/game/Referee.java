@@ -13,6 +13,7 @@ import com.codingame.gameengine.module.entities.GraphicEntityModule;
 import com.codingame.gameengine.module.tooltip.TooltipModule;
 import com.google.inject.Inject;
 
+import org.apache.commons.lang3.ObjectUtils;
 import view.BoardView;
 
 public class Referee extends AbstractReferee {
@@ -52,6 +53,17 @@ public class Referee extends AbstractReferee {
 
 	@Override
 	public void gameTurn(int turn) {
+
+		if( turn == 1 ) {
+			try {
+				board.cacheBuild(gameManager.getActivePlayers().get(0), 15, 7, "SPRINGTRAP");
+			} catch ( InvalidActionException e ) {
+				System.out.println("#################################################################################################################################");
+				System.out.println(e.getMessage());
+				throw new NullPointerException();
+			}
+		}
+
 		for (Player player : gameManager.getActivePlayers()) {
 			for (String line : board.getPlayerInput(player, turn == 1)) {
 				player.sendInputLine(line);

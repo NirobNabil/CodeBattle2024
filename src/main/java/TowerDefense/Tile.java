@@ -36,7 +36,7 @@ public class Tile {
 	public boolean isObstacle() { return obstacle;}
 
 	public boolean canBuild() {
-		return !canyon;
+		return canyon;
 	}
 
 	public char getMapChar() {

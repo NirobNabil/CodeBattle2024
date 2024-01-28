@@ -113,7 +113,8 @@ public class MapGenerator {
 			grid = new Tile[width][height];
 			for (int x = 0; x < width; x++) {
 				for (int y = 0; y < height; y++) {
-					grid[x][y] = new Tile(x, y, true, !(Math.random()>0.5));
+//					grid[x][y] = new Tile(x, y, true, !(Math.random()>0.5));
+					grid[x][y] = new Tile(x, y, true, false);
 				}
 			}
 			for (int x = 0; x < width; x++) {

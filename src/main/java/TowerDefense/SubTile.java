@@ -5,8 +5,9 @@ import java.util.ArrayList;
 public class SubTile {
 	public final static int SUBTILE_SIZE = 10;
 	private Tile tile;
-	private int subX;
-	private int subY;
+	//TODO: made them public for the sake of debugging
+	public int subX;
+	public int subY;
 	private ArrayList<SubTile> neighbors = new ArrayList<>();
 
 	public SubTile(Tile tile, int subX, int subY) {

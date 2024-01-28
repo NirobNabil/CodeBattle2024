@@ -1,21 +1,22 @@
 package TowerDefense;
 
-import java.util.List;
-
 import com.codingame.gameengine.module.entities.GraphicEntityModule;
 import com.codingame.gameengine.module.entities.Group;
 import com.codingame.gameengine.module.tooltip.TooltipModule;
-
 import view.GunTowerView;
 import view.TowerView;
 
-public class GunTower extends Tower {
-	public GunTower(Tile tile) {
-		super("GUNTOWER", tile);
+import java.util.List;
+
+public class SpringTrap extends Tower {
+	Board board;
+	public SpringTrap(Tile tile, Board board) {
+		super("SPRINGTRAP", tile);
 		properties[TowerProperty.DAMAGE.ordinal()] = Constants.GUNTOWER_DAMAGE;
-		properties[TowerProperty.RANGE.ordinal()] = Constants.GUNTOWER_RANGE;
-		properties[TowerProperty.RELOAD.ordinal()] = Constants.GUNTOWER_RELOAD;
+		properties[TowerProperty.RANGE.ordinal()] = Constants.SPRINGTRAP_RANGE;
+		properties[TowerProperty.RELOAD.ordinal()] = Constants.SPRINGTRAP_RELOAD;
 		cost = Constants.GUNTOWER_COST;
+		this.board = board;
 	}
 
 	@Override
@@ -35,8 +36,19 @@ public class GunTower extends Tower {
 			return false;
 
 		this.lastAttacked = target;
-		target.dealDamage((int) getProperty(TowerProperty.DAMAGE));
-		getView().attack(target);
+		System.out.println(board.getGrid()[this.tile.getX()][this.tile.getY()]);
+		double x = this.tile.getX();
+		double y = this.tile.getY();
+		target.disappear();
+		target.kill();
+
+		Tile t = board.getGrid()[target.getCurrentTile().getX()][target.getCurrentTile().getY()+2];
+		target.respawnAt(t);
+//		SubTile stt = t.getSubTile((int)target.getCurrentSubTile().subX, (int)target.getCurrentSubTile().subY);
+//		target.relocate( stt );
+		Tile tt = target.getCurrentTile();
+		SubTile st = target.getCurrentSubTile();
+//		getView().attack(target);
 		return true;
 	}
 

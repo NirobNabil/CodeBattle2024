@@ -141,6 +141,12 @@ public class AttackerView {
 		if(!all.isEmpty()) nextSubTile = all.get(random.nextInt(all.size()));
 //		Tile t = nextSubTile.getTile();
 //		boolean b = t.isObstacle();
+		if(nextSubTile.getX() >= 13 && nextSubTile.getX() <= 16 && attacker.getOwner().getIndex() == 1) {
+			int a = 0;
+			Tile t = nextSubTile.getTile();
+			double x = nextSubTile.getX();
+			double y = nextSubTile.getY();
+		}
 		group.setX((int) (BoardView.CELL_SIZE * nextSubTile.getX()));
 		group.setY((int) (BoardView.CELL_SIZE * nextSubTile.getY()));
 		attacker.setCurrentSubtile(nextSubTile);
@@ -169,6 +175,10 @@ public class AttackerView {
 			group.setVisible(false);
 			//spriteCache.get(attacker.getOwner().getIndex()).add(group);
 		}
+	}
+
+	public void disappear() {
+		group.setVisible(false);
 	}
 
 	private void changeAnimation(String[] body, String[] helmet) {

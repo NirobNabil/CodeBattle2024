@@ -66,9 +66,17 @@ public class Attacker {
 		this.reachOpponentBase = false;
 	}
 
+	public void disappear() {
+		view.disappear();
+	}
 	public void spawn() {
 		this.currentTile = this.spawnTile;
 		this.currentSubtile = this.spawnSubtile;
+	}
+
+	public void respawnAt(Tile newTile) {
+		this.currentTile = newTile;
+		this.currentSubtile = newTile.getSubTile(SubTile.SUBTILE_SIZE-1, 0);
 	}
 
 	public void respawn() {
@@ -107,6 +115,10 @@ public class Attacker {
 
 	public Tile getLocation() {
 		return currentTile;
+	}
+
+	public SubTile getLocationSubTile() {
+		return currentSubtile;
 	}
 
 	public Tile getCurrentTile() {
@@ -163,7 +175,6 @@ public class Attacker {
 	public void setCurrentSubtile(SubTile t){
 		this.currentSubtile = t;
 		this.currentTile = currentSubtile.getTile();
-
 	}
 
 	public void move() {

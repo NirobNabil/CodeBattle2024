@@ -195,7 +195,7 @@ public class Board {
 //	}
 
 	// creating attackers
-	int gg = 3;
+	int gg = 7;
 	public void createAttackerAtBase(Player owner,Player enemy) {
 
 		Attacker a =new Attacker(grid, Constants.HP, Constants.SPEED, Constants.BOUNTY, owner, enemy, gg++);
@@ -215,6 +215,10 @@ public class Board {
 	}
 
 	public void spawnAttackers(int turn) {
+
+		System.out.println("$$$ " + turn + " ###########################################################################################################");
+		System.out.println(towers);
+		System.out.println("###########################################################################################################");
 
 		if(turn==1){
 			for (int i = 0; i <2 ; i++) {
@@ -313,6 +317,9 @@ public class Board {
 			break;
 		case "HEALTOWER":
 			tower = new HealTower(grid[x][y]);
+			break;
+		case "SPRINGTRAP":
+			tower = new SpringTrap(grid[x][y], this);
 			break;
 		default:
 			throw new InvalidActionException("tower type " + type + " unknown", true, player);
